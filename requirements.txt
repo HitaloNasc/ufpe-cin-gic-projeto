@@ -2,3 +2,5 @@ pandas
 openpyxl
 matplotlib
 seaborn
+pymongo
+python-dotenv

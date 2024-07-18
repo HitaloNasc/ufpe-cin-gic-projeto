@@ -1,1 +1,25 @@
-venv
+# Arquivos de configuração específicos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ambiente virtual Python
+venv/
+.venv/
+
+# Arquivos de cache e logs
+*.log
+logs/
+*.pot
+*.pyc
+__pycache__/
+
+# Arquivos gerados pelo Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Outros arquivos e diretórios a serem ignorados
+.idea/
+.vscode/
+
+# Arquivos de ambiente
+.env
