@@ -2,7 +2,21 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
 
+def plot_sexo_counts():
+    sexo_df = pd.DataFrame({'Sexo': sexo_counts.index, 'Proporção': sexo_counts.values})
+    fig = px.pie(sexo_df, values='Proporção', names='Sexo', template='plotly_dark')
+    fig.update_traces(textposition='inside', textinfo='percent+label', insidetextfont=dict(size=20))
+    fig.update_layout(width=350, height=350)
+    st.plotly_chart(fig, use_container_width=True)
+
+def plot_cota_counts():
+    cota_df = pd.DataFrame({'Cota': cota_counts.index, 'Proporção': cota_counts.values})
+    fig = px.pie(cota_df, values='Proporção', names='Cota', template='gridon')
+    fig.update_traces(textposition='inside', textinfo='percent+label', insidetextfont=dict(size=20))
+    fig.update_layout(width=350, height=350)
+    st.plotly_chart(fig, use_container_width=True)
 
 def plot_ingressantes_por_ano_semestre(df):
     plt.figure(figsize=(10, 6))
@@ -32,6 +46,14 @@ def plot_top_10_curso(df):
     plt.ylabel('Curso')
     st.pyplot(plt)
 
+def plot_idade_ingressantes(df):
+    plt.figure(figsize=(10, 6))
+    top_10 = df['IDADE_INGRESSO'].value_counts().nlargest(10).index
+    sns.countplot(data=df[df['IDADE_INGRESSO'].isin(top_10)], x='IDADE_INGRESSO', order=top_10)
+    plt.title('Top 10 Idades dos Ingressantes')
+    plt.xlabel('Idade')
+    plt.ylabel('Quantidade')
+    st.pyplot(plt)
 
 def plot_top_10_naturalidade(df):
     plt.figure(figsize=(10, 6))
@@ -68,6 +90,7 @@ df['IDADE_INGRESSO'] = 2024 - df['ANO_NASC']
 st.set_page_config(
     layout="wide",
 )
+st.sidebar.image('./images/logo-ufpe.png', use_column_width=True)
 
 st.title('Dashboard de Análise Social dos Ingressantes na UFPE (2020-2024)')
 
@@ -92,19 +115,19 @@ st.header('KPIs')
 col1, col2 = st.columns(2)
 
 col1.metric('Total de Ingressantes', len(df_filtered))
-col2.metric('Idade Média dos Ingressantes', f"{round(df_filtered['IDADE_INGRESSO'].mean(), 1)} anos")
 
 sexo_counts = df_filtered['SEXO'].value_counts(normalize=True) * 100
-sexo_masc = sexo_counts.get('M', 0)
-sexo_fem = sexo_counts.get('F', 0)
-col1.write(f"**Proporção por Sexo**")
-col1.write(f"Masculino: {sexo_masc:.1f}%")
-col1.write(f"Feminino: {sexo_fem:.1f}%")
-
 cota_counts = df_filtered['COTA'].value_counts(normalize=True) * 100
-cotas_proporcao = '<br>'.join([f"**{cota}:** {percent:.1f}%" for cota, percent in cota_counts.items()])
-col2.write(f"**Proporção por Cotas**", unsafe_allow_html=True)
-col2.write(cotas_proporcao, unsafe_allow_html=True)
+
+chart1, chart2 = st.columns(2)
+
+with chart1:
+    st.subheader('Proporção por Sexo')
+    plot_sexo_counts()
+
+with chart2:
+    st.subheader('Proporção por Cotas')
+    plot_cota_counts()
 
 st.header('Distribuição de Ingressantes por Ano e Semestre')
 plot_ingressantes_por_ano_semestre(df_filtered)
@@ -114,6 +137,9 @@ plot_campus(df_filtered)
 
 st.header('Top 10 Cursos')
 plot_top_10_curso(df_filtered)
+
+st.header('Top 10 Idades dos Ingressantes')
+plot_idade_ingressantes(df_filtered)
 
 st.header('Top 10 Naturalidades')
 plot_top_10_naturalidade(df_filtered)
