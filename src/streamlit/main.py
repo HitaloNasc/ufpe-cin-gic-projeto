@@ -4,14 +4,16 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 
-def plot_sexo_counts():
+def plot_sexo_counts(sexo_counts):
+    sexo_counts = sexo_counts.rename(index={'M': 'Masculino', 'F': 'Feminino'})
     sexo_df = pd.DataFrame({'Sexo': sexo_counts.index, 'Proporção': sexo_counts.values})
     fig = px.pie(sexo_df, values='Proporção', names='Sexo', template='plotly_dark')
     fig.update_traces(textposition='inside', textinfo='percent+label', insidetextfont=dict(size=20))
     fig.update_layout(width=350, height=350)
     st.plotly_chart(fig, use_container_width=True)
 
-def plot_cota_counts():
+def plot_cota_counts(cota_counts):
+    cota_counts = cota_counts.rename(index={'S': 'Sim', 'N': 'Não'})
     cota_df = pd.DataFrame({'Cota': cota_counts.index, 'Proporção': cota_counts.values})
     fig = px.pie(cota_df, values='Proporção', names='Cota', template='gridon')
     fig.update_traces(textposition='inside', textinfo='percent+label', insidetextfont=dict(size=20))
@@ -83,13 +85,28 @@ def calcular_matriz_transicao(df):
     return stochastic_matrix
 
 
+def plot_ingressantes_por_curso_ano(df, cursos_selecionados):
+    if not cursos_selecionados:
+        cursos_selecionados = df['CURSO'].value_counts().nlargest(5).index
+    df_cursos_ano = df[df['CURSO'].isin(cursos_selecionados)].groupby(['ANO_INGRESSO', 'CURSO']).size().unstack().fillna(0)
+    fig = px.line(df_cursos_ano, x=df_cursos_ano.index, y=cursos_selecionados, markers=True)
+    fig.update_layout(
+        title='Evolução do Número de Ingressantes por Curso ao Longo dos Anos',
+        xaxis_title='Ano de Ingresso',
+        yaxis_title='Quantidade de Ingressantes',
+        xaxis=dict(
+            tickvals=df_cursos_ano.index,  # Define os valores dos ticks como os anos
+            ticktext=[str(year) for year in df_cursos_ano.index],  # Define os textos dos ticks como os anos
+        ),
+        template='plotly_dark'
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+
 df = pd.read_json("./datasets/colect-data.json")
 
 df['IDADE_INGRESSO'] = 2024 - df['ANO_NASC']
 
-st.set_page_config(
-    layout="wide",
-)
 st.sidebar.image('./images/logo-ufpe.png', use_column_width=True)
 
 st.title('Dashboard de Análise Social dos Ingressantes na UFPE (2020-2024)')
@@ -123,11 +140,11 @@ chart1, chart2 = st.columns(2)
 
 with chart1:
     st.subheader('Proporção por Sexo')
-    plot_sexo_counts()
+    plot_sexo_counts(sexo_counts)
 
 with chart2:
     st.subheader('Proporção por Cotas')
-    plot_cota_counts()
+    plot_cota_counts(cota_counts)
 
 st.header('Distribuição de Ingressantes por Ano e Semestre')
 plot_ingressantes_por_ano_semestre(df_filtered)
@@ -137,6 +154,16 @@ plot_campus(df_filtered)
 
 st.header('Top 10 Cursos')
 plot_top_10_curso(df_filtered)
+
+todos_cursos = df['CURSO'].unique().tolist()
+
+col3, col4 = st.columns(2)
+
+with col3:
+    cursos_selecionados = st.multiselect('Selecione um ou mais Cursos para visualizar no gráfico abaixo', todos_cursos)
+
+st.header('Evolução do Número de Ingressantes por Curso ao Longo dos Anos')
+plot_ingressantes_por_curso_ano(df_filtered, cursos_selecionados)
 
 st.header('Top 10 Idades dos Ingressantes')
 plot_idade_ingressantes(df_filtered)
