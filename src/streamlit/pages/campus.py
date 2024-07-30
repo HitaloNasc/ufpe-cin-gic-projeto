@@ -58,12 +58,14 @@ def plot_top_10_curso(df):
 
 
 def plot_idade_ingressantes(df):
-    plt.figure(figsize=(10, 6))
-    top_10 = df['IDADE_INGRESSO'].value_counts().nlargest(10).index
-    sns.countplot(data=df[df['IDADE_INGRESSO'].isin(
-        top_10)], x='IDADE_INGRESSO', order=top_10)
-    plt.title('Top 10 Idades dos Ingressantes')
-    plt.xlabel('Idade')
+    bins = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70]
+    labels = ['16-20', '21-25', '26-30', '31-35', '36-40', '41-45', '46-50', '51-55', '56-60', '61-65', '66-70']
+    df['Faixa_Etaria'] = pd.cut(df['IDADE_INGRESSO'], bins=bins, labels=labels, right=False)
+    faixa_etaria_counts = df['Faixa_Etaria'].value_counts().sort_index()
+    plt.figure(figsize=(12, 8))
+    sns.barplot(x=faixa_etaria_counts.index, y=faixa_etaria_counts.values)
+    plt.title('Quantidade de Ingressantes por Faixa Etária')
+    plt.xlabel('Faixa Etária')
     plt.ylabel('Quantidade')
     st.pyplot(plt)
 
@@ -149,7 +151,7 @@ def plot_impacto_bonificacao(df):
 
 df = pd.read_json("./datasets/colect-data.json")
 
-df['IDADE_INGRESSO'] = 2024 - df['ANO_NASC']
+df['IDADE_INGRESSO'] = df['ANO_INGRESSO'] - df['ANO_NASC']
 
 st.title('Análise por Campus')
 
@@ -210,7 +212,7 @@ with col3:
 st.header('Evolução do Número de Ingressantes por Curso ao Longo dos Anos')
 plot_ingressantes_por_curso_ano(df_filtered, cursos_selecionados)
 
-st.header('Top 10 Idades dos Ingressantes')
+st.header('Idades dos Ingressantes')
 plot_idade_ingressantes(df_filtered)
 
 st.header('Top 10 Naturalidades')
