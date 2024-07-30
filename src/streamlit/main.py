@@ -103,6 +103,33 @@ def plot_ingressantes_por_curso_ano(df, cursos_selecionados):
     st.plotly_chart(fig, use_container_width=True)
 
 
+def plot_impacto_bonificacao(df):
+
+    medicina_df = df[(df['CURSO'] == 'MEDICINA') & (df['CAMPUS'] == 'REITOR JOAQUIM AMAZONAS')]
+    
+
+    medicina_df['Beneficiario_Bonus'] = (medicina_df['UF_ENDERECO'] == 'PE') & (medicina_df['UF_NATURALIDADE'] == 'PE')
+    
+
+    total_medicina = len(medicina_df)
+    qualificados = medicina_df['Beneficiario_Bonus'].sum()
+    nao_qualificados = total_medicina - qualificados
+    
+    bonus_df = pd.DataFrame({
+        'Status': ['Qualificado para Bônus', 'Não Qualificado'],
+        'Quantidade': [qualificados, nao_qualificados]
+    })
+    
+
+    fig = px.pie(bonus_df, values='Quantidade', names='Status', 
+                 title='Impacto do Bônus de Inclusão Regional no Curso de Medicina', 
+                 template='plotly_dark')
+    fig.update_traces(textposition='inside', textinfo='percent+label', insidetextfont=dict(size=20))
+    fig.update_layout(width=350, height=350)
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+
 df = pd.read_json("./datasets/colect-data.json")
 
 df['IDADE_INGRESSO'] = 2024 - df['ANO_NASC']
@@ -177,3 +204,6 @@ plot_top_10_endereco(df_filtered)
 st.header('Matriz Estocástica de Transição: Campus e Cidade de Endereço')
 matriz_transicao = calcular_matriz_transicao(df_filtered)
 st.write(matriz_transicao)
+
+st.header('Impacto do Bônus de Inclusão Regional no Curso de Medicina')
+plot_impacto_bonificacao(df_filtered)
