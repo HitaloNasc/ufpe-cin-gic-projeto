@@ -50,3 +50,9 @@ plot_campus(df_filtered)
 
 st.header('Distribuição por Bairros')
 plot_top_10_bairros(df_filtered)
+
+st.header('Distribuição de Ingressantes por Ano e Semestre')
+plot_ingressantes_por_ano_semestre(df_filtered)
+
+st.header('Principais cursos')
+plot_top_10_curso(df_filtered)
