@@ -3,10 +3,13 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
+from templates.navbar import *
 
 st.set_page_config(layout='wide',
                    page_title="Ingressantes SISU UFPE",
                    page_icon="./images/favicon-ufpe.jpg")
+
+navbar()
 
 st.title("Sobre o trabalho")
 

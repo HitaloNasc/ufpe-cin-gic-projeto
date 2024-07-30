@@ -3,6 +3,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
+from templates.navbar import *
 
 
 def plot_sexo_counts(sexo_counts):
@@ -162,6 +163,8 @@ def plot_impacto_bonificacao(df):
 st.set_page_config(layout='wide',
                    page_title="Análise por campus",
                    page_icon="./images/favicon-ufpe.jpg")
+
+navbar()
 
 st.title('Análise por Campus')
 

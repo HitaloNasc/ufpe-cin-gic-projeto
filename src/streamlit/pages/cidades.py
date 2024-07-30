@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 from pages.campus import *
+from templates.navbar import *
 
 
 def plot_top_10_bairros(df):
@@ -21,6 +22,8 @@ def plot_top_10_bairros(df):
 st.set_page_config(layout='wide',
                    page_title="Análise por cidades",
                    page_icon="./images/favicon-ufpe.jpg")
+
+navbar()
 
 st.title("Análise por Cidades")
 
