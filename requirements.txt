@@ -6,3 +6,5 @@ pymongo
 python-dotenv
 geopy
 unidecode
+streamlit
+plotly
