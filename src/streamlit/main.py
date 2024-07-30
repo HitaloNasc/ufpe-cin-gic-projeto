@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 
+
 st.title("Sobre o trabalho")
 
 st.header("Introdução")

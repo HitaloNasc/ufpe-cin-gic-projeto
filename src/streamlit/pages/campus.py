@@ -59,8 +59,10 @@ def plot_top_10_curso(df):
 
 def plot_idade_ingressantes(df):
     bins = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70]
-    labels = ['16-20', '21-25', '26-30', '31-35', '36-40', '41-45', '46-50', '51-55', '56-60', '61-65', '66-70']
-    df['Faixa_Etaria'] = pd.cut(df['IDADE_INGRESSO'], bins=bins, labels=labels, right=False)
+    labels = ['16-20', '21-25', '26-30', '31-35', '36-40',
+              '41-45', '46-50', '51-55', '56-60', '61-65', '66-70']
+    df['Faixa_Etaria'] = pd.cut(
+        df['IDADE_INGRESSO'], bins=bins, labels=labels, right=False)
     faixa_etaria_counts = df['Faixa_Etaria'].value_counts().sort_index()
     plt.figure(figsize=(12, 8))
     sns.barplot(x=faixa_etaria_counts.index, y=faixa_etaria_counts.values)
