@@ -19,7 +19,8 @@ def plot_top_10_bairros(df):
 
 
 st.set_page_config(layout='wide',
-                   page_title="Análise por cidades")
+                   page_title="Análise por cidades",
+                   page_icon="./images/favicon-ufpe.jpg")
 
 st.title("Análise por Cidades")
 

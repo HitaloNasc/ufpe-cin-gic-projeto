@@ -160,7 +160,8 @@ def plot_impacto_bonificacao(df):
 
 
 st.set_page_config(layout='wide',
-                   page_title="Análise por campus")
+                   page_title="Análise por campus",
+                   page_icon="./images/favicon-ufpe.jpg")
 
 st.title('Análise por Campus')
 
