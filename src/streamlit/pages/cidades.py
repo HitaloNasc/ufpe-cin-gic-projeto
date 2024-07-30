@@ -27,11 +27,13 @@ st.title("Análise por Cidades")
 df = pd.read_json("./datasets/colect-data.json")
 
 cidades = sorted(df['CIDADE_ENDERECO'].unique().tolist())
-cidade_selecionada = st.sidebar.selectbox('Selecione a Cidade', cidades)
+cidades.append('Todas as cidades')
+cidade_selecionada = st.sidebar.multiselect('Selecione as Cidades', cidades, default=['Todas as cidades'])
 
-df_filtered = df.copy()
-df_filtered = df_filtered[df_filtered['CIDADE_ENDERECO'] == cidade_selecionada]
-
+if 'Todas as cidades' in cidade_selecionada:
+    df_filtered = df.copy()
+else:
+    df_filtered = df[df['CIDADE_ENDERECO'].isin(cidade_selecionada)]
 
 st.header('KPIs')
 col1, col2 = st.columns(2)
