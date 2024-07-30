@@ -14,6 +14,7 @@ def plot_sexo_counts(sexo_counts):
     fig.update_traces(textposition='inside',
                       textinfo='percent+label', insidetextfont=dict(size=20))
     fig.update_layout(width=350, height=350)
+    plt.tight_layout()
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -25,6 +26,7 @@ def plot_cota_counts(cota_counts):
     fig.update_traces(textposition='inside',
                       textinfo='percent+label', insidetextfont=dict(size=20))
     fig.update_layout(width=350, height=350)
+    plt.tight_layout()
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -35,6 +37,7 @@ def plot_ingressantes_por_ano_semestre(df):
     plt.xlabel('Ano de Ingresso')
     plt.ylabel('Quantidade')
     plt.legend(title='Semestre de Ingresso')
+    plt.tight_layout()
     st.pyplot(plt)
 
 
@@ -44,6 +47,7 @@ def plot_campus(df):
     plt.title('Distribuição por Campus')
     plt.xlabel('Quantidade')
     plt.ylabel('Campus')
+    plt.tight_layout()
     st.pyplot(plt)
 
 
@@ -54,6 +58,7 @@ def plot_top_10_curso(df):
     plt.title('Top 10 Cursos')
     plt.xlabel('Quantidade')
     plt.ylabel('Curso')
+    plt.tight_layout()
     st.pyplot(plt)
 
 
@@ -69,6 +74,7 @@ def plot_idade_ingressantes(df):
     plt.title('Quantidade de Ingressantes por Faixa Etária')
     plt.xlabel('Faixa Etária')
     plt.ylabel('Quantidade')
+    plt.tight_layout()
     st.pyplot(plt)
 
 
@@ -80,6 +86,7 @@ def plot_top_10_naturalidade(df):
     plt.title('Top 10 Naturalidades')
     plt.xlabel('Quantidade')
     plt.ylabel('Naturalidade')
+    plt.tight_layout()
     st.pyplot(plt)
 
 
@@ -91,6 +98,7 @@ def plot_top_10_endereco(df):
     plt.title('Top 10 Endereços (Cidade)')
     plt.xlabel('Quantidade')
     plt.ylabel('Cidade')
+    plt.tight_layout()
     st.pyplot(plt)
 
 
@@ -151,11 +159,14 @@ def plot_impacto_bonificacao(df):
     st.plotly_chart(fig, use_container_width=True)
 
 
+st.set_page_config(layout='wide',
+                   page_title="Análise por campus")
+
+st.title('Análise por Campus')
+
 df = pd.read_json("./datasets/colect-data.json")
 
 df['IDADE_INGRESSO'] = df['ANO_INGRESSO'] - df['ANO_NASC']
-
-st.title('Análise por Campus')
 
 anos = ['Todos'] + df['ANO_INGRESSO'].unique().tolist()
 semestres = ['Todos'] + df['SEMESTRE_INGRESSO'].unique().tolist()
@@ -184,24 +195,33 @@ col1.metric('Total de Ingressantes', len(df_filtered))
 sexo_counts = df_filtered['SEXO'].value_counts(normalize=True) * 100
 cota_counts = df_filtered['COTA'].value_counts(normalize=True) * 100
 
-chart1, chart2 = st.columns(2)
+charts1, charts2 = st.columns(2)
 
-with chart1:
+with charts1:
     st.subheader('Proporção por Sexo')
     plot_sexo_counts(sexo_counts)
 
-with chart2:
+    st.subheader('Ingressantes por Ano e Semestre')
+    plot_ingressantes_por_ano_semestre(df_filtered)
+
+    st.subheader('Top 10 Cursos')
+    plot_top_10_curso(df_filtered)
+
+    st.subheader('Top 10 Naturalidades')
+    plot_top_10_naturalidade(df_filtered)
+
+with charts2:
     st.subheader('Proporção por Cotas')
     plot_cota_counts(cota_counts)
 
-st.header('Distribuição de Ingressantes por Ano e Semestre')
-plot_ingressantes_por_ano_semestre(df_filtered)
+    st.subheader('Distribuição por Campus')
+    plot_campus(df_filtered)
 
-st.header('Distribuição por Campus')
-plot_campus(df_filtered)
+    st.subheader('Idades dos Ingressantes')
+    plot_idade_ingressantes(df_filtered)
 
-st.header('Top 10 Cursos')
-plot_top_10_curso(df_filtered)
+    st.subheader('Top 10 Endereços (Cidade)')
+    plot_top_10_endereco(df_filtered)
 
 todos_cursos = df['CURSO'].unique().tolist()
 
@@ -213,15 +233,6 @@ with col3:
 
 st.header('Evolução do Número de Ingressantes por Curso ao Longo dos Anos')
 plot_ingressantes_por_curso_ano(df_filtered, cursos_selecionados)
-
-st.header('Idades dos Ingressantes')
-plot_idade_ingressantes(df_filtered)
-
-st.header('Top 10 Naturalidades')
-plot_top_10_naturalidade(df_filtered)
-
-st.header('Top 10 Endereços (Cidade)')
-plot_top_10_endereco(df_filtered)
 
 st.header('Matriz Estocástica de Transição: Campus e Cidade de Endereço')
 matriz_transicao = calcular_matriz_transicao(df_filtered)
