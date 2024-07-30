@@ -52,6 +52,19 @@ pessoas = [
 st.write("\n\n")
 st.markdown("---")
 st.write("Desenvolvido por:")
-pessoas_links = " | ".join(
-    [f'<a href="{pessoa["github_url"]}" style="font-size: 20px; text-decoration: none;">{pessoa["nome"]}</a>' for pessoa in pessoas])
-st.markdown(pessoas_links, unsafe_allow_html=True)
+
+cols = st.columns(len(pessoas))
+
+for col, pessoa in zip(cols, pessoas):
+    with col:
+        st.markdown(
+            f"""
+            <a href="{pessoa['github_url']}" style='text-decoration: none;'>
+                <div style='display: flex; flex-direction: column; align-items: center;'>
+                    <img src="{pessoa['github_url']}.png" width="150" height="150" style='border-radius: 50%;'><br>
+                    <span style='font-size: 20px; color: #0068c9;'>{pessoa['nome']}</span>
+                </div>
+            </a>
+            """,
+            unsafe_allow_html=True
+        )
