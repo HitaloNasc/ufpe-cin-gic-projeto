@@ -4,6 +4,9 @@ from pages.campus import *
 from templates.navbar import *
 import streamlit as st
 
+st.set_page_config(layout='wide',
+                   page_title="Ingressantes SISU UFPE",
+                   page_icon="./images/favicon-ufpe.jpg")
 
 colors = px.colors.qualitative.Plotly
 
