@@ -1,14 +1,9 @@
 import pandas as pd
-import streamlit as st
 import plotly.express as px
 from pages.campus import *
 from templates.navbar import *
+import streamlit as st
 
-st.set_page_config(
-    layout="wide",
-    page_title="Análise por cidades",
-    page_icon="./images/favicon-ufpe.jpg",
-)
 
 colors = px.colors.qualitative.Plotly
 

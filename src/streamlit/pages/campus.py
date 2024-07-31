@@ -1,15 +1,17 @@
 import pandas as pd
-import streamlit as st
 import plotly.express as px
 import plotly.colors as pc
 from templates.navbar import *
+import streamlit as st
+
 
 colors = px.colors.qualitative.Plotly
 
 
 def plot_sexo_counts(sexo_counts):
     sexo_counts = sexo_counts.rename(index={"M": "Masculino", "F": "Feminino"})
-    sexo_df = pd.DataFrame({"Sexo": sexo_counts.index, "Proporção": sexo_counts.values})
+    sexo_df = pd.DataFrame(
+        {"Sexo": sexo_counts.index, "Proporção": sexo_counts.values})
     fig = px.pie(
         sexo_df,
         values="Proporção",
@@ -25,7 +27,8 @@ def plot_sexo_counts(sexo_counts):
 
 def plot_cota_counts(cota_counts):
     cota_counts = cota_counts.rename(index={"S": "Sim", "N": "Não"})
-    cota_df = pd.DataFrame({"Cota": cota_counts.index, "Proporção": cota_counts.values})
+    cota_df = pd.DataFrame(
+        {"Cota": cota_counts.index, "Proporção": cota_counts.values})
     fig = px.pie(
         cota_df,
         values="Proporção",
@@ -49,7 +52,7 @@ def plot_ingressantes_por_ano_semestre(df):
         labels={"ANO_INGRESSO": "Ano de Ingresso", "count": "Quantidade"},
         color_discrete_sequence=colors,
     )
-    fig.update_layout(width=800, height=500)
+    fig.update_layout(width=800, height=500, yaxis_title="Quantidade")
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -57,12 +60,12 @@ def plot_campus(df):
     fig = px.histogram(
         df,
         y="CAMPUS",
+        color="CAMPUS",
         title="Distribuição por Campus",
         labels={"CAMPUS": "Campus", "count": "Quantidade"},
-        color="CAMPUS",
         color_discrete_sequence=colors,
     )
-    fig.update_layout(width=800, height=500)
+    fig.update_layout(width=800, height=500, xaxis_title="Quantidade")
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -78,7 +81,7 @@ def plot_top_10_curso(df):
         color_discrete_sequence=colors,
         category_orders={"CURSO": top_10},
     )
-    fig.update_layout(width=800, height=500)
+    fig.update_layout(width=800, height=500, xaxis_title="Quantidade")
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -125,7 +128,7 @@ def plot_top_10_naturalidade(df):
         color_discrete_sequence=colors,
         category_orders={"NATURALIDADE": top_10},
     )
-    fig.update_layout(width=800, height=500)
+    fig.update_layout(width=800, height=500, xaxis_title="Quantidade")
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -141,12 +144,13 @@ def plot_top_10_endereco(df):
         color_discrete_sequence=colors,
         category_orders={"CIDADE_ENDERECO": top_10},
     )
-    fig.update_layout(width=800, height=500)
+    fig.update_layout(width=800, height=500, xaxis_title="Quantidade")
     st.plotly_chart(fig, use_container_width=True)
 
 
 def calcular_matriz_transicao(df):
-    transicoes = df.groupby(["CIDADE_ENDERECO", "CAMPUS"]).size().unstack(fill_value=0)
+    transicoes = df.groupby(["CIDADE_ENDERECO", "CAMPUS"]
+                            ).size().unstack(fill_value=0)
     stochastic_matrix = transicoes.div(transicoes.sum(axis=1), axis=0)
     return stochastic_matrix
 
@@ -173,6 +177,8 @@ def plot_ingressantes_por_curso_ano(df, cursos_selecionados):
     fig.update_layout(
         width=800,
         height=500,
+        yaxis_title="Quantidade de Ingressantes",
+        xaxis_title="Ano de Ingresso",
         xaxis=dict(
             tickvals=df_cursos_ano.index,
             ticktext=[str(year) for year in df_cursos_ano.index],
@@ -183,7 +189,8 @@ def plot_ingressantes_por_curso_ano(df, cursos_selecionados):
 
 def plot_impacto_bonificacao(df):
     medicina_df = df[
-        (df["CURSO"] == "MEDICINA") & (df["CAMPUS"] == "REITOR JOAQUIM AMAZONAS")
+        (df["CURSO"] == "MEDICINA") & (
+            df["CAMPUS"] == "REITOR JOAQUIM AMAZONAS")
     ]
     medicina_df["Beneficiario_Bonus"] = (medicina_df["UF_ENDERECO"] == "PE") & (
         medicina_df["UF_NATURALIDADE"] == "PE"
@@ -216,12 +223,6 @@ def plot_impacto_bonificacao(df):
     st.plotly_chart(fig, use_container_width=True)
 
 
-st.set_page_config(
-    layout="wide",
-    page_title="Análise por campus",
-    page_icon="./images/favicon-ufpe.jpg",
-)
-
 navbar()
 
 st.title("Análise por Campus")
@@ -243,7 +244,8 @@ df_filtered = df.copy()
 if ano_selecionado != "Todos":
     df_filtered = df_filtered[df_filtered["ANO_INGRESSO"] == ano_selecionado]
 if semestre_selecionado != "Todos":
-    df_filtered = df_filtered[df_filtered["SEMESTRE_INGRESSO"] == semestre_selecionado]
+    df_filtered = df_filtered[df_filtered["SEMESTRE_INGRESSO"]
+                              == semestre_selecionado]
 if campus_selecionado != "Todos":
     df_filtered = df_filtered[df_filtered["CAMPUS"] == campus_selecionado]
 
