@@ -6,10 +6,10 @@ from templates.navbar import *
 
 colors = px.colors.qualitative.Plotly
 
+
 def plot_sexo_counts(sexo_counts):
     sexo_counts = sexo_counts.rename(index={"M": "Masculino", "F": "Feminino"})
-    sexo_df = pd.DataFrame(
-        {"Sexo": sexo_counts.index, "Proporção": sexo_counts.values})
+    sexo_df = pd.DataFrame({"Sexo": sexo_counts.index, "Proporção": sexo_counts.values})
     fig = px.pie(
         sexo_df,
         values="Proporção",
@@ -25,8 +25,7 @@ def plot_sexo_counts(sexo_counts):
 
 def plot_cota_counts(cota_counts):
     cota_counts = cota_counts.rename(index={"S": "Sim", "N": "Não"})
-    cota_df = pd.DataFrame(
-        {"Cota": cota_counts.index, "Proporção": cota_counts.values})
+    cota_df = pd.DataFrame({"Cota": cota_counts.index, "Proporção": cota_counts.values})
     fig = px.pie(
         cota_df,
         values="Proporção",
@@ -147,8 +146,7 @@ def plot_top_10_endereco(df):
 
 
 def calcular_matriz_transicao(df):
-    transicoes = df.groupby(["CIDADE_ENDERECO", "CAMPUS"]
-                            ).size().unstack(fill_value=0)
+    transicoes = df.groupby(["CIDADE_ENDERECO", "CAMPUS"]).size().unstack(fill_value=0)
     stochastic_matrix = transicoes.div(transicoes.sum(axis=1), axis=0)
     return stochastic_matrix
 
@@ -185,8 +183,7 @@ def plot_ingressantes_por_curso_ano(df, cursos_selecionados):
 
 def plot_impacto_bonificacao(df):
     medicina_df = df[
-        (df["CURSO"] == "MEDICINA") & (
-            df["CAMPUS"] == "REITOR JOAQUIM AMAZONAS")
+        (df["CURSO"] == "MEDICINA") & (df["CAMPUS"] == "REITOR JOAQUIM AMAZONAS")
     ]
     medicina_df["Beneficiario_Bonus"] = (medicina_df["UF_ENDERECO"] == "PE") & (
         medicina_df["UF_NATURALIDADE"] == "PE"
@@ -246,8 +243,7 @@ df_filtered = df.copy()
 if ano_selecionado != "Todos":
     df_filtered = df_filtered[df_filtered["ANO_INGRESSO"] == ano_selecionado]
 if semestre_selecionado != "Todos":
-    df_filtered = df_filtered[df_filtered["SEMESTRE_INGRESSO"]
-                              == semestre_selecionado]
+    df_filtered = df_filtered[df_filtered["SEMESTRE_INGRESSO"] == semestre_selecionado]
 if campus_selecionado != "Todos":
     df_filtered = df_filtered[df_filtered["CAMPUS"] == campus_selecionado]
 
