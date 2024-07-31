@@ -4,6 +4,12 @@ import plotly.express as px
 from pages.campus import *
 from templates.navbar import *
 
+st.set_page_config(
+    layout="wide",
+    page_title="Análise por cidades",
+    page_icon="./images/favicon-ufpe.jpg",
+)
+
 colors = px.colors.qualitative.Plotly
 
 
@@ -23,12 +29,6 @@ def plot_top_10_bairros(df):
     fig.update_layout(width=800, height=500)
     st.plotly_chart(fig, use_container_width=True)
 
-
-st.set_page_config(
-    layout="wide",
-    page_title="Análise por cidades",
-    page_icon="./images/favicon-ufpe.jpg",
-)
 
 navbar()
 
