@@ -61,15 +61,19 @@ fig = px.choropleth(
     color_continuous_scale="OrRd",
     range_color=[0, map_data['log_quantidade'].max()],
     title="Distribuição de alunos por cidades",
-    labels={'log_quantidade': 'Quantidade'}
+    labels={'log_quantidade': 'Escala logarítmica'},
+    hover_data={
+        'municipio': True,
+        'quantidade': True
+    }
 )
 
 fig.update_geos(
     fitbounds="locations",
-    visible=False,
+    visible=False
 )
 
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 df_matriz = df.copy()
 
