@@ -72,6 +72,7 @@ def plot_campus(df):
     fig.update_layout(width=800, height=500, xaxis_title="Quantidade")
     st.plotly_chart(fig, use_container_width=True)
 
+
 def plot_top_10_curso(df):
     top_10 = df["CURSO"].value_counts().nlargest(10).index
     filtered_df = df[df["CURSO"].isin(top_10)]
