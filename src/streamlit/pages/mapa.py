@@ -5,6 +5,12 @@ import json
 import numpy as np
 from templates.navbar import *
 
+def calcular_matriz_transicao(df):
+    transicoes = df.groupby(["CIDADE_ENDERECO", "CAMPUS"]
+                            ).size().unstack(fill_value=0)
+    stochastic_matrix = transicoes.div(transicoes.sum(axis=1), axis=0)
+    return stochastic_matrix
+
 st.set_page_config(layout='wide',
                    page_title="Ingressantes SISU UFPE",
                    page_icon="./images/favicon-ufpe.jpg")
@@ -13,14 +19,19 @@ navbar()
 
 df = pd.read_json("./datasets/colect-data.json")
 
-campi = df["CAMPUS"].unique().tolist()
+campi = ['Todos'] + df["CAMPUS"].unique().tolist()
 campus_selecionado = st.sidebar.selectbox("Selecione o Campus", campi)
 
-df_filtered = df.copy()
-df_filtered = df_filtered[(df_filtered['CAMPUS'] == campus_selecionado)]
+anos = ['Todos'] + df["ANO_INGRESSO"].unique().tolist()
+ano_selecionado = st.sidebar.selectbox("Selecione o Ano", anos)
 
-if campus_selecionado != "Todos":
-    df_filtered = df_filtered[df_filtered["CAMPUS"] == campus_selecionado]
+df_filtered = df.copy()
+
+if campus_selecionado != 'Todos':
+    df_filtered = df_filtered[df_filtered['CAMPUS'] == campus_selecionado]
+
+if ano_selecionado != 'Todos':
+    df_filtered = df_filtered[df_filtered['ANO_INGRESSO'] == ano_selecionado]
 
 
 cidades_contagem = df_filtered['CIDADE_ENDERECO'].value_counts().reset_index()
@@ -49,7 +60,8 @@ fig = px.choropleth(
     color='log_quantidade',
     color_continuous_scale="OrRd",
     range_color=[0, map_data['log_quantidade'].max()],
-    title="Distribuição de alunos por cidades"
+    title="Distribuição de alunos por cidades",
+    labels={'log_quantidade': 'Quantidade'}
 )
 
 fig.update_geos(
@@ -58,3 +70,12 @@ fig.update_geos(
 )
 
 st.plotly_chart(fig)
+
+df_matriz = df.copy()
+
+if ano_selecionado != 'Todos':
+    df_matriz = df_matriz[df_matriz['ANO_INGRESSO'] == ano_selecionado]
+
+st.subheader("Matriz de Transição")
+matriz_transicao = calcular_matriz_transicao(df_matriz)
+st.write(matriz_transicao)

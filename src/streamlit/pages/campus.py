@@ -152,13 +152,6 @@ def plot_top_10_endereco(df):
     st.plotly_chart(fig, use_container_width=True)
 
 
-def calcular_matriz_transicao(df):
-    transicoes = df.groupby(["CIDADE_ENDERECO", "CAMPUS"]
-                            ).size().unstack(fill_value=0)
-    stochastic_matrix = transicoes.div(transicoes.sum(axis=1), axis=0)
-    return stochastic_matrix
-
-
 def plot_ingressantes_por_curso_ano(df, cursos_selecionados):
     if not cursos_selecionados:
         cursos_selecionados = df["CURSO"].value_counts().nlargest(5).index
@@ -297,10 +290,6 @@ with col3:
 
 st.header("Evolução do Número de Ingressantes por Curso ao Longo dos Anos")
 plot_ingressantes_por_curso_ano(df_filtered, cursos_selecionados)
-
-st.header("Matriz Estocástica de Transição: Campus e Cidade de Endereço")
-matriz_transicao = calcular_matriz_transicao(df_filtered)
-st.write(matriz_transicao)
 
 st.header("Impacto do Bônus de Inclusão Regional no Curso de Medicina")
 plot_impacto_bonificacao(df_filtered)
