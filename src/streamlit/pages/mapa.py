@@ -6,10 +6,11 @@ import numpy as np
 from templates.navbar import *
 
 def calcular_matriz_transicao(df):
-    transicoes = df.groupby(["CIDADE_ENDERECO", "CAMPUS"]
-                            ).size().unstack(fill_value=0)
-    stochastic_matrix = transicoes.div(transicoes.sum(axis=1), axis=0)
+    transicoes = df.groupby(["CIDADE_ENDERECO", "CAMPUS"]).size().unstack(fill_value=0)
+    stochastic_matrix = transicoes.div(transicoes.sum(axis=1), axis=0) * 100
+    stochastic_matrix = stochastic_matrix.round(2)
     return stochastic_matrix
+
 
 st.set_page_config(layout='wide',
                    page_title="Ingressantes SISU UFPE",
@@ -80,6 +81,6 @@ df_matriz = df.copy()
 if ano_selecionado != 'Todos':
     df_matriz = df_matriz[df_matriz['ANO_INGRESSO'] == ano_selecionado]
 
-st.subheader("Matriz de Transição")
+st.subheader("Matriz de Transição (em %)")
 matriz_transicao = calcular_matriz_transicao(df_matriz)
 st.write(matriz_transicao)

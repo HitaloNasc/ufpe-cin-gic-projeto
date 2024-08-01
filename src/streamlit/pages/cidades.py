@@ -48,10 +48,6 @@ if "Todas as cidades" in cidade_selecionada:
 else:
     df_filtered = df[df["CIDADE_ENDERECO"].isin(cidade_selecionada)]
 
-st.header("KPIs")
-col1, col2 = st.columns(2)
-col1.metric("Total de Ingressantes", len(df_filtered))
-
 sexo_counts = df_filtered["SEXO"].value_counts(normalize=True) * 100
 cota_counts = df_filtered["COTA"].value_counts(normalize=True) * 100
 

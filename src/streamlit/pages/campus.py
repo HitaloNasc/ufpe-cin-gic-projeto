@@ -60,14 +60,23 @@ def plot_ingressantes_por_ano_semestre(df):
 
 
 def plot_campus(df):
-    fig = px.histogram(
-        df,
-        y="CAMPUS",
-        color="CAMPUS",
+    # Contagem por campus
+    campus_counts = df['CAMPUS'].value_counts()
+
+    # Adiciona uma linha para o total de ingressantes
+    campus_counts['Total'] = campus_counts.sum()
+
+    campus_df = pd.DataFrame({'Campus': campus_counts.index, 'Quantidade': campus_counts.values})
+
+    fig = px.bar(
+        campus_df,
+        y="Campus",
+        x="Quantidade",
+        color="Campus",
         title="Distribuição por Campus",
-        labels={"CAMPUS": "Campus", "count": "Quantidade"},
+        labels={"Campus": "Campus", "Quantidade": "Quantidade"},
         color_discrete_sequence=colors,
-        category_orders={"CAMPUS": df['CAMPUS'].value_counts().index}
+        category_orders={"Campus": campus_df['Campus']}  # Ordena os campus pelo total
     )
     fig.update_layout(width=800, height=500, xaxis_title="Quantidade")
     st.plotly_chart(fig, use_container_width=True)
@@ -246,10 +255,6 @@ if semestre_selecionado != "Todos":
 if campus_selecionado != "Todos":
     df_filtered = df_filtered[df_filtered["CAMPUS"] == campus_selecionado]
 
-st.header("KPIs")
-col1, col2 = st.columns(2)
-col1.metric("Total de Ingressantes", len(df_filtered))
-
 sexo_counts = df_filtered["SEXO"].value_counts(normalize=True) * 100
 cota_counts = df_filtered["COTA"].value_counts(normalize=True) * 100
 
@@ -281,6 +286,8 @@ with charts2:
     plot_top_10_endereco(df_filtered)
 
 todos_cursos = df["CURSO"].unique().tolist()
+st.header("Evolução do Número de Ingressantes por Curso ao Longo dos Anos")
+
 col3, col4 = st.columns(2)
 
 with col3:
@@ -288,8 +295,8 @@ with col3:
         "Selecione um ou mais Cursos para visualizar no gráfico abaixo", todos_cursos
     )
 
-st.header("Evolução do Número de Ingressantes por Curso ao Longo dos Anos")
 plot_ingressantes_por_curso_ano(df_filtered, cursos_selecionados)
+
 
 st.header("Impacto do Bônus de Inclusão Regional no Curso de Medicina")
 plot_impacto_bonificacao(df_filtered)
