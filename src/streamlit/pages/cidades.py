@@ -10,23 +10,26 @@ st.set_page_config(layout='wide',
 
 colors = px.colors.qualitative.Plotly
 
-
 def plot_top_10_bairros(df):
-    top_10 = df["BAIRRO_ENDERECO"].value_counts().nlargest(10).index
+    bairro_counts = df["BAIRRO_ENDERECO"].value_counts()
+    top_10 = bairro_counts.nlargest(10).index
     bairros_df = df[df["BAIRRO_ENDERECO"].isin(top_10)]
-
+    bairro_counts_top_10 = bairros_df["BAIRRO_ENDERECO"].value_counts()
+    bairros_counts_df = pd.DataFrame({
+        'Bairro': bairro_counts_top_10.index,
+        'Quantidade': bairro_counts_top_10.values
+    })
     fig = px.bar(
-        bairros_df,
-        y="BAIRRO_ENDERECO",
-        color="BAIRRO_ENDERECO",
-        category_orders={"BAIRRO_ENDERECO": top_10},
+        bairros_counts_df,
+        x='Quantidade',
+        y='Bairro',
+        color='Bairro',
         title="Principais Bairros",
-        labels={"BAIRRO_ENDERECO": "Bairro", "count": "Quantidade"},
-        color_discrete_sequence=colors,
+        labels={"Bairro": "Bairro", "Quantidade": "Quantidade"},
+        color_discrete_sequence=px.colors.qualitative.Plotly,
     )
     fig.update_layout(width=800, height=500)
     st.plotly_chart(fig, use_container_width=True)
-
 
 navbar()
 
