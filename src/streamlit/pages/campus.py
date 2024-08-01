@@ -60,10 +60,8 @@ def plot_ingressantes_por_ano_semestre(df):
 
 
 def plot_campus(df):
-    # Contagem por campus
     campus_counts = df['CAMPUS'].value_counts()
 
-    # Adiciona uma linha para o total de ingressantes
     campus_counts['Total'] = campus_counts.sum()
 
     campus_df = pd.DataFrame({'Campus': campus_counts.index, 'Quantidade': campus_counts.values})
