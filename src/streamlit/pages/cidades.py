@@ -24,7 +24,6 @@ def plot_top_10_bairros(df):
         x='Quantidade',
         y='Bairro',
         color='Bairro',
-        title="Principais Bairros",
         labels={"Bairro": "Bairro", "Quantidade": "Quantidade"},
         color_discrete_sequence=px.colors.qualitative.Plotly,
     )

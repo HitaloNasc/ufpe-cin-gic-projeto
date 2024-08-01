@@ -51,7 +51,6 @@ def plot_ingressantes_por_ano_semestre(df):
         x="ANO_INGRESSO",
         color="SEMESTRE_INGRESSO",
         barmode="group",
-        title="Distribuição de Ingressantes por Ano e Semestre",
         labels={"ANO_INGRESSO": "Ano de Ingresso", "count": "Quantidade"},
         color_discrete_sequence=colors,
     )
@@ -71,10 +70,9 @@ def plot_campus(df):
         y="Campus",
         x="Quantidade",
         color="Campus",
-        title="Distribuição por Campus",
         labels={"Campus": "Campus", "Quantidade": "Quantidade"},
         color_discrete_sequence=colors,
-        category_orders={"Campus": campus_df['Campus']}  # Ordena os campus pelo total
+        category_orders={"Campus": campus_df['Campus']}
     )
     fig.update_layout(width=800, height=500, xaxis_title="Quantidade")
     st.plotly_chart(fig, use_container_width=True)
@@ -86,7 +84,6 @@ def plot_top_10_curso(df):
     fig = px.histogram(
         filtered_df,
         y="CURSO",
-        title="Top 10 Cursos",
         labels={"CURSO": "Curso", "count": "Quantidade"},
         color="CURSO",
         color_discrete_sequence=colors,
@@ -118,7 +115,6 @@ def plot_idade_ingressantes(df):
     fig = px.bar(
         x=faixa_etaria_counts.index,
         y=faixa_etaria_counts.values,
-        title="Quantidade de Ingressantes por Faixa Etária",
         labels={"x": "Faixa Etária", "y": "Quantidade"},
         color=faixa_etaria_counts.index,
         color_discrete_sequence=colors,
@@ -133,7 +129,6 @@ def plot_top_10_naturalidade(df):
     fig = px.histogram(
         filtered_df,
         y="NATURALIDADE",
-        title="Top 10 Naturalidades",
         labels={"NATURALIDADE": "Naturalidade", "count": "Quantidade"},
         color="NATURALIDADE",
         color_discrete_sequence=colors,
@@ -149,7 +144,6 @@ def plot_top_10_endereco(df):
     fig = px.histogram(
         filtered_df,
         y="CIDADE_ENDERECO",
-        title="Top 10 Endereços (Cidade)",
         labels={"CIDADE_ENDERECO": "Cidade", "count": "Quantidade"},
         color="CIDADE_ENDERECO",
         color_discrete_sequence=colors,
@@ -173,7 +167,6 @@ def plot_ingressantes_por_curso_ano(df, cursos_selecionados):
         df_cursos_ano,
         x=df_cursos_ano.index,
         y=df_cursos_ano.columns,
-        title="Evolução do Número de Ingressantes por Curso ao Longo dos Anos",
         labels={"x": "Ano de Ingresso", "y": "Quantidade de Ingressantes"},
         color_discrete_sequence=colors,
         markers=True,
@@ -212,7 +205,6 @@ def plot_impacto_bonificacao(df):
         bonus_df,
         values="Quantidade",
         names="Status",
-        title="Impacto do Bônus de Inclusão Regional no Curso de Medicina",
         template="plotly_dark",
         color="Status",
         color_discrete_map={
